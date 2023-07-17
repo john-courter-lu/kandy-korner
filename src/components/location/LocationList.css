@@ -1,0 +1,25 @@
+.locations {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.location {
+    background-color: rebeccapurple;
+    border: 2px dotted thistle;
+    color: white;
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+.location__footer {
+    margin: 1rem 0 0.25rem 0;
+    font-style: oblique;
+}
+
+.location__header {
+    font-size: larger;
+    font-weight: 700;
+    line-height: 3rem;
+}
