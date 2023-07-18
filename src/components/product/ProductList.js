@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react"
 import "./ProductList.css"
+import { useNavigate } from "react-router-dom"
 
 export const ProductList = () => {
+
+    const navigate = useNavigate()
 
     const [products, setProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
     const [topPricedBoolean, setTopPricedBoolean] = useState(false)
+
+    const localKandyUser = localStorage.getItem("kandy_user")
+    const kandyUserObject = JSON.parse(localKandyUser)
 
     const getAndSetAllProducts = () => {
         fetch("http://localhost:8088/products?_expand=productType&_sort=name&_order=asc")
@@ -40,6 +46,11 @@ export const ProductList = () => {
     return <>
         <button onClick={() => { setTopPricedBoolean(true) }}>Top Priced</button>
         <button onClick={() => { setTopPricedBoolean(false) }}>Show All</button>
+
+        {kandyUserObject.staff ?
+        <button onClick={() => navigate("/products/create")}>Add Products</button> : ""
+        }
+        
         <h2>List of Products</h2>
         <article className="products">
             {
@@ -47,7 +58,7 @@ export const ProductList = () => {
                     return (
                         <section className="product" key={`product--${product.id}`}>
                             <div className="product__header">{product.id} 🍬{product.name}🍬</div>
-                           
+
                             <div>Price: ${product.price}</div>
                             <div>Type: {product?.productType?.name}</div>
                         </section>
