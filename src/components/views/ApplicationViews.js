@@ -5,6 +5,8 @@ import { ProductForm } from "../form/ProductForm.js"
 import { SearchContainer } from "../search/SearchContainer.js"
 import { EmployeeList } from "../employee/EmployeeList.js"
 import { EmployeeForm } from "../employee/EmployeeForm.js"
+import { CustomerDetails, CustomerList, EditLoyalityNumber } from "../customer/CustomerList.js"
+
 
 export const ApplicationViews = () => {
 	return <Routes>
@@ -23,6 +25,9 @@ export const ApplicationViews = () => {
 			<Route path="products/search" element={<SearchContainer />} />
 			<Route path="employees" element={<EmployeeList />} />
 			<Route path="employees/create" element={<EmployeeForm />} />
+			<Route path="customers" element={<CustomerList />} />
+			<Route path="customers/:customerId" element={<CustomerDetails />} />
+			<Route path="customers/:customerId/edit-loyalty-number" element={<EditLoyalityNumber />} />
 
 
 		</Route>
