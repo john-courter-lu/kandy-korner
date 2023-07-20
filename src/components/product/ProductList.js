@@ -92,8 +92,8 @@ export const ProductList = ({ searchTerms }) => {
                                 <div className="product__header">{product.id} 🍬{product.name}🍬</div>
 
                                 <div>Price: ${product.price}</div>
-                                {searchTerms === "" ?
-                                    <div>Type: {product?.productType?.name}</div> : ""}
+                                
+                                <div>Type: {product?.productType?.name}</div>
 
                             </section>
                         )

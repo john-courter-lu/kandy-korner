@@ -8,6 +8,9 @@ export const CustomerList = () => {
 
     const [customers, setCustomers] = useState([])
 
+    const localKandyUser = localStorage.getItem("kandy_user")
+    const kandyUserObject = JSON.parse(localKandyUser)
+
     useEffect(() => {
         fetch("http://localhost:8088/customers")
             .then(response => response.json())
@@ -24,6 +27,7 @@ export const CustomerList = () => {
                         <section className="customer" key={`customer--${customer.id}`}>
                             <div className="customer__header">
                                 <Link to={`/customers/${customer.id}`}>Customer No.{customer.id}</Link>
+                                {kandyUserObject.id === customer.userId ? "🗝️" : ""}
                             </div>
                             <div>Loyalty Number: {customer.loyaltyNumber}</div>
                             <div>User ID: {customer.userId}</div>
@@ -39,6 +43,10 @@ export const CustomerDetails = () => {
 
     const { customerId } = useParams()
     const [customer, setCustomer] = useState({})
+    const navigate = useNavigate()
+
+    const localKandyUser = localStorage.getItem("kandy_user")
+    const kandyUserObject = JSON.parse(localKandyUser)
 
     useEffect(
         () => {
@@ -52,6 +60,15 @@ export const CustomerDetails = () => {
         },
         [customerId]
     )
+    const handleDeleteButtonClick = () => {
+        fetch(`http://localhost:8088/customers/${customerId}`, {
+            method: "DELETE"
+        })
+            // .then(response => response.json()) <--- dont need it since we arent sending anything
+            .then(() => {
+                navigate(`/customers`)
+            })
+    }
 
     return (
         <section className="customer" key={`customer--${customer.id}`}>
@@ -63,6 +80,12 @@ export const CustomerDetails = () => {
                     {customer.loyaltyNumber}
                 </Link>
             </div>
+            {kandyUserObject.staff ?
+                <div><button
+                    onClick={handleDeleteButtonClick}>
+                    Delete This Customer</button></div>
+                : ""
+            }
         </section>
     )
 }
