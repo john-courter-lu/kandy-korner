@@ -17,7 +17,7 @@ export const EmployeeForm = () => {
         isStaff: true
     })
 
-    const [addedEmployeeUser, updateAddedEmployeeUser] = useState({})
+    //const [addedEmployeeUser, updateAddedEmployeeUser] = useState({})
 
     const [newEmployee, updateNewEmployee] = useState({
         startDate: '',
@@ -46,36 +46,33 @@ export const EmployeeForm = () => {
             body: JSON.stringify(userObjToSend)
         })
             .then(res => res.json())
-            .then(() => { fetchNewlyAddedUserObj() })
-            .then(() => { postEmployeeObj() })
-
-        const fetchNewlyAddedUserObj = () => {
-            //获得最新addedUser的obj,从而获得id
-            fetch(`http://localhost:8088/users?name=${newUser.name}`) //url: users?name=Johh Doe
-                .then(res => res.json())//需要nested 在这个then 里面
-                .then((returnedArray) =>  {
-                    const NewlyAddedUserObj = returnedArray[0]
-                    updateAddedEmployeeUser(NewlyAddedUserObj)//分成两行做test,初始和上一行合二为一
-                } )//注意: 这里只取array的第一个对象, 而不是只有一个对象的array. 
-        }
+            .then(() => { postEmployeeObj() })//需要nested 在这个then 里面
 
         const postEmployeeObj = () => {
-
-            const employeeObjToSend = {
-                startDate: newEmployee.startDate,
-                payRate: Number(newEmployee.payRate),//也可用parseFloat(newEmployee.payRate, 2)
-                locationId: Number(newEmployee.locationId),//用户填写的是string,需要Number()
-                userId: addedEmployeeUser.id,//json的id是数字,不需要Number()
-            }
-
-            fetch(`http://localhost:8088/employees`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(employeeObjToSend)
-            })
+            //获得最新addedUser的obj,从而获得id
+            fetch(`http://localhost:8088/users?name=${newUser.name}`) //url: users?name=Johh Doe
                 .then(res => res.json())
-                .then(() => {
-                    navigate("/employees")
+                .then((returnedArray) => {
+                    const NewlyAddedUserObj = returnedArray[0]//注意: 这里只取array的第一个对象, 而不是只有一个对象的array. 
+
+                    //下面的post也是nested在.then()中,保证一定先fetch成功再做
+                    const employeeObjToSend = {
+                        startDate: newEmployee.startDate,
+                        payRate: Number(newEmployee.payRate),//也可用parseFloat(newEmployee.payRate, 2)
+                        locationId: Number(newEmployee.locationId),//用户填写的是string,需要Number()
+                        userId: NewlyAddedUserObj.id,//json的id是数字,不需要Number()
+                    }
+
+                    fetch(`http://localhost:8088/employees`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(employeeObjToSend)
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            navigate("/employees")
+                        })
+
                 })
         }
 
